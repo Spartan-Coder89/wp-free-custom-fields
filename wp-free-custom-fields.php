@@ -18,7 +18,7 @@
 
 if (!defined('ABSPATH')) die;
 
-
+define( 'WPFCF_VERSION', '0.1' );
 define( 'WPFCF_PATH', plugin_dir_path(__FILE__) );
 define( 'WPFCF_URL', plugins_url( '', __FILE__ ) );
 

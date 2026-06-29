@@ -3,40 +3,11 @@ namespace WPFCF;
 
 trait WPFCF_Has_Metaboxes {
 
-  function create_metaboxes( $screen ) {
+  function create_metaboxes( Array $metaboxes_args ) {
 
-    add_action( 'add_meta_boxes', function() use ( $screen ) {
+    add_action( 'add_meta_boxes', function() use ( $metaboxes_args ) {
 
-      /**
-       * List of arguments for the metaboxes to be registered
-       * when create_metaboxes function is invoked. 
-       * 
-       * This is where you put the arguments of the metaboxes(s) 
-       * you want to register.
-       */
-      $metaboxes_collection = [
-        'wpfcf_field_groups' => [
-          [
-            'html_id'         => 'wpfcf_field_group',
-            'title'           => 'Fields',
-            'callback_render' => function() { echo 'Hellow'; },
-            'screen'          => $screen,
-            'context'         => 'normal',
-            'priority'        => 'high'
-          ],
-          [
-            'html_id'         => 'wpfcf_field_group_settings',
-            'title'           => 'Settings',
-            'callback_render' => function() { echo 'Hellow'; },
-            'screen'          => $screen,
-            'context'         => 'normal',
-            'priority'        => 'default'
-          ],
-        ],
-      ];
-
-      //  Register metaboxes
-      foreach ($metaboxes_collection[$screen] as $key => $args) {
+      foreach ($metaboxes_args as $key => $args) {
 
         add_meta_box(
           $args['html_id'],
@@ -51,7 +22,16 @@ trait WPFCF_Has_Metaboxes {
 
   }
 
-  function save_metabox() {
+  function save_metabox( String $hook, Array $nonce, String $data ) {
 
+    add_action( 'save_post_'. $hook, function( $post_id ) use ( $nonce, $data ) {
+
+      if ( !wp_verify_nonce($nonce['value'], $nonce['action']) ) return;
+      if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return;
+      if ( wp_is_post_revision($post_id) ) return;
+      if ( !current_user_can('edit_post', $post_id) ) return;
+
+      
+    });
   }
 }
