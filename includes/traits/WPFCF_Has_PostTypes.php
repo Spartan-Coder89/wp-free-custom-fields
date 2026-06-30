@@ -3,8 +3,14 @@ namespace WPFCF;
 
 trait WPFCF_Has_PostTypes {
 
+  /**
+   * Creates a custom post type
+   * 
+   * Format of accepted parameter:
+   * Same as what is defined in wordpress codex
+   */
   function create_post_type( String $post_type_slug, $post_types_args ) {
-
+    
     add_action('init', function() use ( $post_type_slug, $post_types_args ) {
       register_post_type( $post_type_slug, $post_types_args );
     });

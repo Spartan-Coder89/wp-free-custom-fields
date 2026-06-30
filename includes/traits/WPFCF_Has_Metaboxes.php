@@ -3,6 +3,22 @@ namespace WPFCF;
 
 trait WPFCF_Has_Metaboxes {
 
+  /**
+   * Creates metaboxes
+   * 
+   * Format of accepted parameter:
+   * [
+   *  [
+   *    'html_id'         => 'The html id of the metabox',
+   *    'title'           => 'The title of the metabox',
+   *    'callback_render' => function() {},
+   *    'screen'          => 'The post or admin page slug',
+   *    'context'         => 'high' or 'normal' or 'default',
+   *    'priority'        => 'high' or 'normal' or 'default'
+   *  ],
+   *  ...
+   * ]
+   */
   function create_metaboxes( Array $metaboxes_args ) {
 
     add_action( 'add_meta_boxes', function() use ( $metaboxes_args ) {

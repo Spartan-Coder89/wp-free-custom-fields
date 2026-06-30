@@ -59,7 +59,9 @@ class WPFCF_Admin {
       [
         'html_id'         => 'wpfcf_field_group',
         'title'           => 'Fields',
-        'callback_render' => function() { echo 'Hellow'; },
+        'callback_render' => function() { 
+          require_once WPFCF_PATH .'/includes/templates/fields.php';
+         },
         'screen'          => 'wpfcf_field_groups',
         'context'         => 'normal',
         'priority'        => 'high'
@@ -67,7 +69,9 @@ class WPFCF_Admin {
       [
         'html_id'         => 'wpfcf_field_group_settings',
         'title'           => 'Settings',
-        'callback_render' => function() { echo 'Hellow'; },
+        'callback_render' => function() { 
+          require_once WPFCF_PATH .'/includes/templates/fields_settings.php';
+        },
         'screen'          => 'wpfcf_field_groups',
         'context'         => 'normal',
         'priority'        => 'default'
@@ -78,20 +82,32 @@ class WPFCF_Admin {
     $this->enqueue_cpt_admin_scripts( [
       'post_type'       => 'wpfcf_field_groups',
       'allowed_screens' => ['post.php', 'post-new.php'],
-      'enqueue_style'   => [
-        'handle'      => 'admin',
-        'source'      => WPFCF_URL .'/assets/css/admin.css',
-        'dependency'  => [],
-        'version'     => WPFCF_VERSION,
-      ],
-      'enqueue_script'  => [
-        'handle'      => 'alpinejs',
-        'source'      => WPFCF_URL .'/assets/js/alpinejs@3.15.12.js',
-        'dependency'  => [],
-        'version'     => WPFCF_VERSION,
-        'in_footer'   => [
-          'strategy'  => 'defer',
-          'in_footer' => false,
+      'assets'          => [
+        [
+          'type'        => 'style',
+          'handle'      => 'admin',
+          'source'      => WPFCF_URL .'/assets/css/admin.css',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+        ],
+        [
+          'type'        => 'script',
+          'handle'      => 'alpinejs',
+          'source'      => WPFCF_URL .'/assets/js/alpinejs@3.15.12.js',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+          'in_footer'   => [
+            'strategy'  => 'defer',
+            'in_footer' => false,
+          ]
+        ],
+        [
+          'type'        => 'script',
+          'handle'      => 'admin',
+          'source'      => WPFCF_URL .'/assets/js/admin.js',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+          'in_footer'   => true
         ]
       ]
     ]);
