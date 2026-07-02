@@ -111,5 +111,14 @@ class WPFCF_Admin {
         ]
       ]
     ]);
+
+    //  Insert add/edit field modal in admin page
+    add_action( 'admin_footer', function() {
+
+      $current_screen = get_current_screen();
+      if ( $current_screen->id !== 'wpfcf_field_groups' ) return;
+
+      require_once WPFCF_PATH .'/includes/templates/add_edit_fields_modal.php';
+    });
   }
 }
