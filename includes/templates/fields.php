@@ -22,12 +22,12 @@
               @click="
                 $store.globals.is_editing_field.status = true;
                 $store.globals.is_editing_field.index = index;
-                open_add_edit_field_modal(); 
+                open_add_edit_field_modal();
               ">Edit</button>
             <button 
               type="button" 
               class="button button-secondary button-small"
-              @click="remove_field(index)">Remove</button>
+              @click="remove_field(field.id)">Remove</button>
           </div>
         </div>
       </template>

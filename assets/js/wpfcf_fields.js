@@ -39,7 +39,7 @@ document.addEventListener('alpine:init', () => {
      * Used by:
      * Remove button in the field row 
      */
-    remove_field( index ) {
+    remove_field( id ) {
       this.$store.globals.field_group = this.$store.globals.field_group.filter(location => location.id !== id)
     }
   }))
