@@ -45,6 +45,8 @@ document.addEventListener('alpine:init', () => {
       //  Reset modal
       this.$store.globals.show_add_edit_modal = false
       this.reset_add_edit_modal_fields()
+
+      console.log(this.$store.globals.field_group)
     },
 
     /**

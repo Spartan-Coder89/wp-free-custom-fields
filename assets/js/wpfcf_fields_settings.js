@@ -6,7 +6,6 @@ document.addEventListener('alpine:init', () => {
     wp_rest_nonce : wpfcf_fields_settings_obj.wp_rest_nonce,
     plugin_url : wpfcf_fields_settings_obj.plugin_url,
     locations : [],
-    screens: [],
 
     async init() {
       //  Set default if locations object is empty

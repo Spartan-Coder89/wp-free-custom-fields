@@ -2,7 +2,6 @@ document.addEventListener('alpine:init', () => {
 
   Alpine.store('globals', {
     field_group: [],
-    group_field_group_settings: {},
     show_add_edit_modal: false,
     title_add_edit_field_modal: {
       heading: 'Add field',
