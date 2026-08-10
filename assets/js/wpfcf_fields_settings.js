@@ -55,7 +55,7 @@ document.addEventListener('alpine:init', () => {
       const screens = await this.fetch_screens( location )
       
       this.locations.push({ 
-        "id" : crypto.randomUUID(),
+        "id" : this.$store.globals.generate_uuid(),
         "location" : location,
         "screens" : screens,
         "selected_screen" : screens[0].name

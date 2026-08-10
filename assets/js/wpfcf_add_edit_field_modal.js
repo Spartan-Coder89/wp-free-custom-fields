@@ -11,42 +11,27 @@ document.addEventListener('alpine:init', () => {
     confirm_field() {
       
       let collection = {}
-      
-      document.querySelectorAll('.add_edit_field_input').forEach( (add_edit_field_input) => {
-        
-        let collection_key = 'type'
+      let index = this.$store.globals.is_editing_field.index
 
-        if (add_edit_field_input.id === 'add_edit_field_type') {
-          collection_key = 'type'
-          
-        } else if (add_edit_field_input.id === 'add_edit_field_label') {
-          collection_key = 'label'
-
-        } else if (add_edit_field_input.id === 'add_edit_field_slug') {
-          collection_key = 'slug'
-
-        } else if (add_edit_field_input.id === 'add_edit_field_default') {
-          collection_key = 'default'
-        }
-
-        collection[collection_key] = add_edit_field_input.value
-      })
+      collection.type = this.$store.globals.add_edit_modal_fields.type
+      collection.label = this.$store.globals.add_edit_modal_fields.label
+      collection.slug = this.$store.globals.add_edit_modal_fields.slug
+      collection.default = this.$store.globals.add_edit_modal_fields.default
 
       //  If current modal is for editing a field
       if (this.$store.globals.is_editing_field.status) {
-        this.$store.globals.field_group[this.$store.globals.is_editing_field.index] = collection
+        collection.id = this.$store.globals.field_group[index].id
+        this.$store.globals.field_group[index] = collection
 
       //  If current modal is for adding another field
       } else {
-        collection.key = this.$store.globals.generate_field_key( prefix = 'field' )
+        collection.id = this.$store.globals.generate_uuid()
         this.$store.globals.field_group.push( collection )
       }
 
       //  Reset modal
       this.$store.globals.show_add_edit_modal = false
       this.reset_add_edit_modal_fields()
-
-      console.log(this.$store.globals.field_group)
     },
 
     /**
@@ -67,14 +52,10 @@ document.addEventListener('alpine:init', () => {
      */
     reset_add_edit_modal_fields() {
 
-      document.querySelectorAll('.add_edit_field_input').forEach( (add_edit_field_input) => {
-
-        if (add_edit_field_input.id === 'add_edit_field_type') {
-          add_edit_field_input.value = 'text'
-        } else {
-          add_edit_field_input.value = ''
-        }
-      })
+      this.$store.globals.add_edit_modal_fields.type = ''
+      this.$store.globals.add_edit_modal_fields.label = ''
+      this.$store.globals.add_edit_modal_fields.slug = ''
+      this.$store.globals.add_edit_modal_fields.default = ''
 
       if (this.$store.globals.is_editing_field.status) {
         this.$store.globals.is_editing_field.status = false

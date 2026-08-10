@@ -40,4 +40,6 @@
     @click="open_add_edit_field_modal">
     Add another field
   </button>
+
+  <input type="hidden" name="fields_config" :value="JSON.stringify( $store.globals.field_group )">
 </div>

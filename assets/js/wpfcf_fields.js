@@ -24,10 +24,10 @@ document.addEventListener('alpine:init', () => {
         this.$store.globals.title_add_edit_field_modal.heading = 'Edit field'
         this.$store.globals.title_add_edit_field_modal.subheading = 'You are now editing the '+ field.label +' field'
 
-        document.getElementById('add_edit_field_type').value = field.type
-        document.getElementById('add_edit_field_label').value = field.label
-        document.getElementById('add_edit_field_slug').value = field.slug
-        document.getElementById('add_edit_field_default').value = field.default
+        this.$store.globals.add_edit_modal_fields.type = field.type
+        this.$store.globals.add_edit_modal_fields.label = field.label
+        this.$store.globals.add_edit_modal_fields.slug = field.slug
+        this.$store.globals.add_edit_modal_fields.default = field.default
       }
       
       this.$store.globals.show_add_edit_modal = true
@@ -39,9 +39,8 @@ document.addEventListener('alpine:init', () => {
      * Used by:
      * Remove button in the field row 
      */
-    remove_field( slug ) {
-      delete this.$store.globals.field_group[slug]
-      console.log(this.$store.globals.field_group)
+    remove_field( index ) {
+      this.$store.globals.field_group = this.$store.globals.field_group.filter(location => location.id !== id)
     }
   }))
 

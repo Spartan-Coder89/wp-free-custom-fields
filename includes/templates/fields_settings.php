@@ -55,4 +55,6 @@
     @click="add_another_location('post-type')">
     Add another location
   </button>
+
+  <input type="hidden" name="fields_config" :value="JSON.stringify( locations )">
 </div>
