@@ -19,6 +19,13 @@ trait WPFCF_Has_Assets {
    *      'version'     => WPFCF_VERSION,
    *    ],
    *    ....
+   *   ],
+   *   'localize'       => [
+   *    [
+   *      'handle'      => 'the script handle',
+   *      'object_name' => 'desired object name',
+   *      'data'        => 'named array example: ['wpfcf_nonce' => wp_create_nonce( 'wp_rest' )]'
+   *    ]      
    *   ]
    * ]
    */
@@ -42,9 +49,8 @@ trait WPFCF_Has_Assets {
               $asset['dependency'],
               $asset['version']
             );
-          }
-
-          if ( $asset['type'] == 'script' ) {
+            
+          } else if ( $asset['type'] == 'script' ) {
             wp_enqueue_script(
               $asset['handle'],
               $asset['source'],
@@ -56,10 +62,21 @@ trait WPFCF_Has_Assets {
         }
       }
 
+      if ( isset($args['localize']) and !empty($args['localize']) ) {
+
+        foreach ($args['localize'] as $localize_key => $localize) {
+          wp_localize_script( $localize['handle'], $localize['object_name'], $localize['data']);
+        }
+      }
+
     });
   }
 
   function enqueue_admin_page_scripts() {
+    
+  }
+
+  function localize_enqueued_script() {
     
   }
 }

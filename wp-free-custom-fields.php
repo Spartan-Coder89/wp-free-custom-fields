@@ -25,5 +25,6 @@ define( 'WPFCF_URL', plugins_url( '', __FILE__ ) );
 require_once WPFCF_PATH .'wpfcf_autoloader.php';
 
 add_action( 'plugins_loaded', function() {
+  new WPFCF\WPFCF_Rest();
   new WPFCF\WPFCF_Admin();
 });

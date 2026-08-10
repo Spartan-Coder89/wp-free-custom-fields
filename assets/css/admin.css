@@ -62,3 +62,50 @@
   color: var(--wp-admin-theme-color);
   cursor: pointer;
 }
+
+#location_screen {
+  margin-bottom: 4px;
+}
+
+#location_screen .header_labels {
+  display: flex;
+  padding-bottom: 12px;
+}
+
+#location_screen .header_labels .labels {
+  display: flex;
+  width: 90%;
+}
+
+#location_screen .header_labels .labels > * {
+  width: 50%;
+  font-weight: 500;
+}
+
+#location_screen .header_labels > :last-child {
+  width: 10%;
+}
+
+#location_screen .location_item_row {
+  display: flex;
+  padding-bottom: 8px;
+}
+
+#location_screen .location_item_row > .location_item {
+  display: flex;
+  width: 90%;
+}
+
+#location_screen .location_item_row > .location_item > * {
+  width: 50%;
+  padding-right: 12px;
+}
+
+#location_screen .location_item_row > .location_item > * h2,
+#location_screen .location_item_row > .location_item > * select {
+  width: 100%;
+}
+
+#location_screen .location_item_row .remove_location_button {
+  width: 10%;
+}

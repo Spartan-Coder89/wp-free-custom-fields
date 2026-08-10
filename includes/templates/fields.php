@@ -1,4 +1,4 @@
-<div x-data="wpfcf_admin">
+<div x-data="wpfcf_fields">
   <div id="fields_container">
     <div class="table_headers">
       <div>Label</div>

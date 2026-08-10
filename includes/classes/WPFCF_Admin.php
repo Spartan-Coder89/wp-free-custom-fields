@@ -25,9 +25,9 @@ class WPFCF_Admin {
     //  Implemented from WPFCF_Has_PostTypes trait
     $this->create_post_type( 'wpfcf_field_groups', [
       'labels'              => [
-        'name'               => 'Field Groups',
-        'singular_name'      => 'Field Group',
-        'menu_name'          => 'Field Groups',
+        'name'               => 'WPFCF Field Groups',
+        'singular_name'      => 'WPFCF Field Group',
+        'menu_name'          => 'WPFCF Field Groups',
         'add_new'            => 'Add New',
         'add_new_item'       => 'Add New Field Group',
         'edit_item'          => 'Edit Field Group',
@@ -85,14 +85,14 @@ class WPFCF_Admin {
       'assets'          => [
         [
           'type'        => 'style',
-          'handle'      => 'admin',
+          'handle'      => 'wpfcf-admin',
           'source'      => WPFCF_URL .'/assets/css/admin.css',
           'dependency'  => [],
           'version'     => WPFCF_VERSION,
         ],
         [
           'type'        => 'script',
-          'handle'      => 'alpinejs',
+          'handle'      => 'wpfcf-alpinejs',
           'source'      => WPFCF_URL .'/assets/js/alpinejs@3.15.12.js',
           'dependency'  => [],
           'version'     => WPFCF_VERSION,
@@ -103,11 +103,48 @@ class WPFCF_Admin {
         ],
         [
           'type'        => 'script',
-          'handle'      => 'admin',
-          'source'      => WPFCF_URL .'/assets/js/admin.js',
+          'handle'      => 'wpfcf-store-globals',
+          'source'      => WPFCF_URL .'/assets/js/wpfcf_store_globals.js',
           'dependency'  => [],
           'version'     => WPFCF_VERSION,
           'in_footer'   => true
+        ],
+        [
+          'type'        => 'script',
+          'handle'      => 'wpfcf-fields',
+          'source'      => WPFCF_URL .'/assets/js/wpfcf_fields.js',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+          'in_footer'   => true
+        ],
+        [
+          'type'        => 'script',
+          'handle'      => 'wpfcf-add-edit-field-modal',
+          'source'      => WPFCF_URL .'/assets/js/wpfcf_add_edit_field_modal.js',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+          'in_footer'   => true
+        ],
+        [
+          'type'        => 'script',
+          'handle'      => 'wpfcf-fields-settings',
+          'source'      => WPFCF_URL .'/assets/js/wpfcf_fields_settings.js',
+          'dependency'  => [],
+          'version'     => WPFCF_VERSION,
+          'in_footer'   => true
+        ]
+      ],
+      'localize'        => [
+        [
+          'handle'      => 'wpfcf-fields-settings',
+          'object_name' => 'wpfcf_fields_settings_obj',
+          'data'        => [
+            // note: VERY IMPORTANT: action must be EXPLICITLY NAMED 'wp_rest' if nonce is gonna be used for REST ENDPOINT access. 
+            // If not, you will recieve rest cookie check error. Cost me a lot of hours to resolve this error. :(
+            'wp_rest_nonce' => wp_create_nonce( 'wp_rest' ), 
+            'site_url'      => get_site_url(),
+            'plugin_url'   => plugins_url('wp-free-custom-fields')
+          ]
         ]
       ]
     ]);
@@ -122,3 +159,11 @@ class WPFCF_Admin {
     });
   }
 }
+
+
+/**
+ * NOTES:
+ * 
+ * - Can't get all the post types with admin screens if we localize. There seems to be some conflict.
+ *   Resolution is to fetch from the frontend. 
+ */
