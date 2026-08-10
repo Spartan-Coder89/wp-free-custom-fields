@@ -8,6 +8,8 @@ document.addEventListener('alpine:init', () => {
     locations : [],
 
     async init() {
+
+
       //  Set default if locations object is empty
       if (Object.keys(this.locations).length === 0) this.add_another_location('post-type')
     },
@@ -43,6 +45,30 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
+    async fetch_field_group_settings() {
+
+      // try {
+
+      //   const response = await fetch( this.site_url +'/wp-json/wpfcf/v1/get-location-screens/?screen='+ screen, {
+      //     method: 'GET',
+      //     credentials: 'same-origin',
+      //     headers: {
+      //       'X-WP-Nonce': this.wp_rest_nonce
+      //     }
+      //   })
+        
+      //   if (!response.ok) {
+      //     const error_body = await response.json()
+      //     throw new Error( error_body.message || 'Request failed' )
+      //   }
+        
+      //   return await response.json()
+
+      // } catch( error ) {
+      //   console.error( 'Error fetching screen: ', error.message )
+      //   throw error 
+      // }
+    },
 
     /**
      * Adds another location 

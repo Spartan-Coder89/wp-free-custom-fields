@@ -38,16 +38,17 @@ trait WPFCF_Has_Metaboxes {
 
   }
 
-  function save_metabox( String $hook, Array $nonce, String $data ) {
+  function save_metabox( String $post_type, String $nonce_action, callable $save_callback ) {
 
-    add_action( 'save_post_'. $hook, function( $post_id ) use ( $nonce, $data ) {
-
-      if ( !wp_verify_nonce($nonce['value'], $nonce['action']) ) return;
+    add_action( "save_post_{$post_type}", function( $post_id, $post ) use ( $nonce_action, $save_callback ) {
+      
+      if ( !isset($_POST[$nonce_action]) ) return;
+      if ( !wp_verify_nonce($_POST[$nonce_action], $nonce_action) ) return;
       if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return;
       if ( wp_is_post_revision($post_id) ) return;
       if ( !current_user_can('edit_post', $post_id) ) return;
 
-      
-    });
+      call_user_func($save_callback, $post_id, $post);
+    }, 10, 2); // Important note: accepted argument parameter must match the number of arguments passed on call_user_func
   }
 }

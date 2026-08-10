@@ -3,7 +3,7 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('wpfcf_fields', () => ({
     
     init() {
-      //  Get the fields config and assign to fields variable 
+      //  Get the fields config and assign to fields variable
       //  Iterate on the values of the field group config
     },
 

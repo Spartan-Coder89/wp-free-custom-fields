@@ -78,6 +78,16 @@ class WPFCF_Admin {
       ],
     ]);
 
+    //  Implemented from WPFCF_Has_Metaboxes trait
+    $this->save_metabox( 'wpfcf_field_groups', 'wpfcf_group_fields_nonce', function($post_id, $post) {
+      
+      $fields_config = $this->sanitize_json_structure_string($_POST['fields_config']);
+      $fields_settings_config = $this->sanitize_json_structure_string($_POST['fields_settings_config']);
+  
+      update_post_meta( $post_id, 'wpfcf_fields_config', $fields_config);
+      update_post_meta( $post_id, 'wpfcf_fields_settings_config', $fields_settings_config);
+    });
+
     //  Implemented from WPFCF_Has_Assets trait
     $this->enqueue_cpt_admin_scripts( [
       'post_type'       => 'wpfcf_field_groups',
@@ -157,6 +167,39 @@ class WPFCF_Admin {
 
       require_once WPFCF_PATH .'/includes/templates/add_edit_fields_modal.php';
     });
+  }
+
+
+  /**
+   * Helper function to sanitize json
+   */
+  function sanitize_json_structure_string(string $raw_json): string {
+
+      $data = json_decode(wp_unslash($raw_json), true);
+
+      if (json_last_error() !== JSON_ERROR_NONE) return '[]'; // invalid JSON in, safe empty structure out
+
+      $sanitize = function ($value) use (&$sanitize) {
+
+        if (is_array($value)) {
+
+          $result = [];
+          foreach ($value as $key => $item) {
+            $safe_key = is_string($key) ? sanitize_key($key) : $key;
+            $result[$safe_key] = $sanitize($item);
+          }
+          return $result;
+        }
+
+        if (is_string($value)) {
+          return sanitize_text_field($value);
+        }
+
+        // numbers, booleans, null pass through untouched
+        return $value;
+      };
+
+      return wp_json_encode($sanitize($data));
   }
 }
 

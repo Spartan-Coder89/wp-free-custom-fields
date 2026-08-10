@@ -56,5 +56,5 @@
     Add another location
   </button>
 
-  <input type="hidden" name="fields_config" :value="JSON.stringify( locations )">
+  <input type="hidden" name="fields_settings_config" :value="JSON.stringify( locations )">
 </div>

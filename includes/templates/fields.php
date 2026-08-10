@@ -41,5 +41,6 @@
     Add another field
   </button>
 
-  <input type="hidden" name="fields_config" :value="JSON.stringify( $store.globals.field_group )">
+  <input type="hidden" name="fields_config" :value="JSON.stringify( $store.globals.field_group )" />
+  <input type="hidden" name="wpfcf_group_fields_nonce" value="<?php echo wp_create_nonce( 'wpfcf_group_fields_nonce' ); ?>" />
 </div>
