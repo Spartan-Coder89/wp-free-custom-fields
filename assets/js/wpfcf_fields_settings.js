@@ -48,9 +48,10 @@ document.addEventListener('alpine:init', () => {
     /**
      * Adds another location 
      */
-    async add_another_location( location, event ) {
-      
-      event.target.setAttribute('disabled', true)
+    async add_another_location( location ) {
+
+      const add_another_location = this.$refs.add_another_location
+      add_another_location.setAttribute('disabled', true)
 
       const screens = await this.fetch_screens( location )
       
@@ -61,7 +62,7 @@ document.addEventListener('alpine:init', () => {
         "selected_screen" : screens[0].name
       })
 
-      event.target.removeAttribute('disabled')
+      add_another_location.removeAttribute('disabled')
     },
 
 

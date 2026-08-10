@@ -24,7 +24,9 @@
             </select>
           </div>
           <div>
-            <select class="screen" :id="'location_screen_'+ location.id" @change="update_selected_location_screen(index, $event.target.value)">
+            <select class="screen" 
+            :id="'location_screen_'+ location.id" 
+            @change="update_selected_location_screen(index, $event.target.value)">
               <template x-for="screen in location.screens">
                 <option 
                   :value="screen.name" 
@@ -47,9 +49,10 @@
     </template>
   </div>
   <button 
-    type="button" id="add_another_location" 
+    type="button" 
+    x-ref="add_another_location" 
     class="button button-secondary button-medium"
-    @click="add_another_location('post-type', $event)">
+    @click="add_another_location('post-type')">
     Add another location
   </button>
 </div>
