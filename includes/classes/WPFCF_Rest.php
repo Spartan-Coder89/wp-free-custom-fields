@@ -7,25 +7,42 @@ use WP_Error; // ✅ imports the global class into this namespace
 class WPFCF_Rest {
 
   function __construct() {
-    add_action( 'rest_api_init', [$this, 'register_screens_route'] );
-  }
 
-  function register_screens_route() {
+    add_action( 'rest_api_init', function() {
 
-    register_rest_route( 'wpfcf/v1', '/get-location-screens/', [
-      'methods'             => 'GET',
-      'callback'            => [$this, 'get_location_screens_data'],
-      'permission_callback' => function( WP_REST_Request $request ) {
-        
-        $rest_nonce = $request->get_header( 'X-WP-Nonce' );
+      register_rest_route( 'wpfcf/v1', '/get-location-screens/', [
+        'methods'             => 'GET',
+        'callback'            => [$this, 'get_location_screens_data'],
+        'permission_callback' => function( WP_REST_Request $request ) {
+          
+          $rest_nonce = $request->get_header( 'X-WP-Nonce' );
 
-        if (is_null( $rest_nonce ) or empty( $rest_nonce )) {
-          return new WP_Error( 'rest_forbidden', 'Missing nonce.', [ 'status' => 403 ] );
+          if (is_null( $rest_nonce ) or empty( $rest_nonce )) {
+            return new WP_Error( 'rest_forbidden', 'Missing nonce.', [ 'status' => 403 ] );
+          }
+
+          return is_user_logged_in() and current_user_can( 'read' );
         }
+      ]);
+    });
 
-        return is_user_logged_in() and current_user_can( 'read' );
-      }
-    ]);
+    add_action( 'rest_api_init', function() {
+
+      register_rest_route( 'wpfcf/v1', '/config/', [
+        'methods'             => 'GET',
+        'callback'            => [$this, 'get_config_data'],
+        'permission_callback' => function( WP_REST_Request $request ) {
+          
+          $rest_nonce = $request->get_header( 'X-WP-Nonce' );
+
+          if (is_null( $rest_nonce ) or empty( $rest_nonce )) {
+            return new WP_Error( 'rest_forbidden', 'Missing nonce.', [ 'status' => 403 ] );
+          }
+
+          return is_user_logged_in() and current_user_can( 'read' );
+        }
+      ]);
+    });
   }
 
   function get_location_screens_data( WP_REST_Request $request ) {
@@ -182,6 +199,20 @@ class WPFCF_Rest {
       
       default:
         break;
+    }
+
+    return rest_ensure_response($return_value);
+  }
+
+
+  function get_config_data( WP_REST_Request $request ) {
+    
+    $return_value = '';
+
+    if ($request['type'] == 'fields_config') {
+      $return_value = get_post_meta( $request['post_id'], 'wpfcf_fields_config', true );
+    } else {
+      $return_value = get_post_meta( $request['post_id'], 'wpfcf_fields_settings_config', true );
     }
 
     return rest_ensure_response($return_value);

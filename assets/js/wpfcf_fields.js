@@ -1,10 +1,14 @@
 document.addEventListener('alpine:init', () => {
   
   Alpine.data('wpfcf_fields', () => ({
-    
-    init() {
-      //  Get the fields config and assign to fields variable
-      //  Iterate on the values of the field group config
+
+    async init() {
+      
+      let fields_group_config = await this.$store.globals.fetch_configs('fields_config')
+
+      if (Object.keys(fields_group_config).length > 0) {
+        this.$store.globals.field_group = JSON.parse(fields_group_config)
+      }
     },
 
     /**

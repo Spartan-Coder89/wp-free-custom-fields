@@ -11,6 +11,9 @@ class WPFCF_Admin {
   
   function __construct() {
 
+    global $post;
+    $id = $post->ID;
+
     //  Implemented from WPFCF_Has_Admin_Page trait
     $this->create_admin_page( [
       'page_title'          => 'WP Free Custom Fields',
@@ -146,14 +149,14 @@ class WPFCF_Admin {
       ],
       'localize'        => [
         [
-          'handle'      => 'wpfcf-fields-settings',
-          'object_name' => 'wpfcf_fields_settings_obj',
+          'handle'      => 'wpfcf-store-globals',
+          'object_name' => 'wpfcf_store_globals_obj',
           'data'        => [
             // note: VERY IMPORTANT: action must be EXPLICITLY NAMED 'wp_rest' if nonce is gonna be used for REST ENDPOINT access. 
             // If not, you will recieve rest cookie check error. Cost me a lot of hours to resolve this error. :(
             'wp_rest_nonce' => wp_create_nonce( 'wp_rest' ), 
             'site_url'      => get_site_url(),
-            'plugin_url'   => plugins_url('wp-free-custom-fields')
+            'plugin_url'    => plugins_url('wp-free-custom-fields')
           ]
         ]
       ]
@@ -202,11 +205,3 @@ class WPFCF_Admin {
       return wp_json_encode($sanitize($data));
   }
 }
-
-
-/**
- * NOTES:
- * 
- * - Can't get all the post types with admin screens if we localize. There seems to be some conflict.
- *   Resolution is to fetch from the frontend. 
- */

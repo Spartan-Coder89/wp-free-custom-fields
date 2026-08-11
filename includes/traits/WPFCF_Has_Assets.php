@@ -65,6 +65,7 @@ trait WPFCF_Has_Assets {
       if ( isset($args['localize']) and !empty($args['localize']) ) {
 
         foreach ($args['localize'] as $localize_key => $localize) {
+          $localize['data']['post_id'] = $post->ID;
           wp_localize_script( $localize['handle'], $localize['object_name'], $localize['data']);
         }
       }

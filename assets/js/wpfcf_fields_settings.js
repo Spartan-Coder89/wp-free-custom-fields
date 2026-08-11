@@ -2,14 +2,16 @@ document.addEventListener('alpine:init', () => {
   
   Alpine.data('wpfcf_fields_settings', () => ({
     
-    site_url : wpfcf_fields_settings_obj.site_url,
-    wp_rest_nonce : wpfcf_fields_settings_obj.wp_rest_nonce,
-    plugin_url : wpfcf_fields_settings_obj.plugin_url,
     locations : [],
 
     async init() {
 
+      let fields_settings_config = await this.$store.globals.fetch_configs('fields_settings_config')
 
+      if (Object.keys(fields_settings_config).length > 0) {
+        this.locations = JSON.parse(fields_settings_config)
+      }
+      
       //  Set default if locations object is empty
       if (Object.keys(this.locations).length === 0) this.add_another_location('post-type')
     },
@@ -24,11 +26,11 @@ document.addEventListener('alpine:init', () => {
 
       try {
 
-        const response = await fetch( this.site_url +'/wp-json/wpfcf/v1/get-location-screens/?screen='+ screen, {
+        const response = await fetch( this.$store.globals.site_url +'/wp-json/wpfcf/v1/get-location-screens/?screen='+ screen, {
           method: 'GET',
           credentials: 'same-origin',
           headers: {
-            'X-WP-Nonce': this.wp_rest_nonce
+            'X-WP-Nonce': this.$store.globals.wp_rest_nonce
           }
         })
         
@@ -45,30 +47,6 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    async fetch_field_group_settings() {
-
-      // try {
-
-      //   const response = await fetch( this.site_url +'/wp-json/wpfcf/v1/get-location-screens/?screen='+ screen, {
-      //     method: 'GET',
-      //     credentials: 'same-origin',
-      //     headers: {
-      //       'X-WP-Nonce': this.wp_rest_nonce
-      //     }
-      //   })
-        
-      //   if (!response.ok) {
-      //     const error_body = await response.json()
-      //     throw new Error( error_body.message || 'Request failed' )
-      //   }
-        
-      //   return await response.json()
-
-      // } catch( error ) {
-      //   console.error( 'Error fetching screen: ', error.message )
-      //   throw error 
-      // }
-    },
 
     /**
      * Adds another location 

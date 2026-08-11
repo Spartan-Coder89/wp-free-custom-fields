@@ -49,6 +49,7 @@ trait WPFCF_Has_Metaboxes {
       if ( !current_user_can('edit_post', $post_id) ) return;
 
       call_user_func($save_callback, $post_id, $post);
+      
     }, 10, 2); // Important note: accepted argument parameter must match the number of arguments passed on call_user_func
   }
 }
