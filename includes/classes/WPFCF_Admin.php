@@ -11,9 +11,6 @@ class WPFCF_Admin {
   
   function __construct() {
 
-    global $post;
-    $id = $post->ID;
-
     //  Implemented from WPFCF_Has_Admin_Page trait
     $this->create_admin_page( [
       'page_title'          => 'WP Free Custom Fields',
