@@ -3,17 +3,45 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('wpfcf_fields_settings', () => ({
     
     locations : [],
+    locations_model : [],
 
     async init() {
 
       let fields_settings_config = await this.$store.globals.fetch_configs('fields_settings_config')
 
+      //  If fields_settings_config object is not empty then
+      //  update the locations object with screens property
       if (Object.keys(fields_settings_config).length > 0) {
+
         this.locations = JSON.parse(fields_settings_config)
+
+        //  Get all the screens of the locations found locations object
+        const location_screens = await Promise.all(
+          this.locations.map( async (location) => {
+            return {
+              "location" : location.location,
+              "screens" : await this.fetch_screens( location.location )
+            }
+          })
+        )
+
+        //  Map the locations object with the screens corresponding the location
+        this.locations = this.locations.map((location) => {
+          return {
+            "id" : location.id,
+            "location" : location.location,
+            "screens" : location_screens.find((screen) => screen.location === location.location).screens,
+            "selected_screen" : location.selected_screen
+          }
+        })
       }
       
       //  Set default if locations object is empty
-      if (Object.keys(this.locations).length === 0) this.add_another_location('post-type')
+      if (Object.keys(this.locations).length === 0) { 
+        this.add_another_location('post-type') 
+      }
+
+      this.update_locations_model()
     },
 
 
@@ -65,6 +93,8 @@ document.addEventListener('alpine:init', () => {
         "selected_screen" : screens[0].name
       })
 
+      this.update_locations_model()
+
       add_another_location.removeAttribute('disabled')
     },
 
@@ -82,6 +112,8 @@ document.addEventListener('alpine:init', () => {
       this.locations[index].screens = await this.fetch_screens( location )
 
       screens_html_element.removeAttribute('disabled')
+
+      this.update_locations_model()
     },
 
 
@@ -89,8 +121,27 @@ document.addEventListener('alpine:init', () => {
      * Updates the selected_screen property in 
      * locations object
      */
-    update_selected_location_screen( index, selected_screen ) {
+    update_location_selected_screen( index, selected_screen ) {
       this.locations[index].selected_screen = selected_screen
+      this.update_locations_model()
+    },
+
+
+    /**
+     * Removes the screens property from locations object 
+     * then updates the locations_model object from locations object
+     */
+    update_locations_model() {
+
+      this.locations_model = this.locations.map((location) => {
+        return {
+          "id" : location.id,
+          "location" : location.location,
+          "selected_screen" : location.selected_screen
+        }
+      })
+
+      // console.log(this.locations_model)
     },
 
 
@@ -100,6 +151,7 @@ document.addEventListener('alpine:init', () => {
      */
     remove_location_item(id) {
       this.locations = this.locations.filter(location => location.id !== id)
+      this.update_locations_model()
     }
 
   }))

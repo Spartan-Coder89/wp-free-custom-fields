@@ -26,7 +26,7 @@
           <div>
             <select class="screen" 
             :id="'location_screen_'+ location.id" 
-            @change="update_selected_location_screen(index, $event.target.value)">
+            @change="update_location_selected_screen(index, $event.target.value)">
               <template x-for="screen in location.screens">
                 <option 
                   :value="screen.name" 
@@ -56,5 +56,5 @@
     Add another location
   </button>
 
-  <input type="hidden" name="fields_settings_config" :value="JSON.stringify( locations )">
+  <input type="hidden" name="fields_settings_config" :value="JSON.stringify( locations_model )">
 </div>
