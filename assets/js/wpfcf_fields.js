@@ -30,7 +30,7 @@ document.addEventListener('alpine:init', () => {
 
         this.$store.globals.add_edit_modal_fields.type = field.type
         this.$store.globals.add_edit_modal_fields.label = field.label
-        this.$store.globals.add_edit_modal_fields.slug = field.slug
+        this.$store.globals.add_edit_modal_fields.name = field.name
         this.$store.globals.add_edit_modal_fields.default = field.default
       }
       

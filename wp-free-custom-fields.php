@@ -27,4 +27,5 @@ require_once WPFCF_PATH .'wpfcf_autoloader.php';
 add_action( 'plugins_loaded', function() {
   new WPFCF\WPFCF_Rest();
   new WPFCF\WPFCF_Admin();
+  new WPFCF\WPFCF_Render_Fields();
 });

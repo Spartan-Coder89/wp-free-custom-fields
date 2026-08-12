@@ -40,7 +40,7 @@ document.addEventListener('alpine:init', () => {
       ],
       "type" : "text",
       "label" : "",
-      "slug" : "",
+      "name" : "",
       "default" : ""
     },
 

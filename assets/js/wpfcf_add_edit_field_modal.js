@@ -15,7 +15,7 @@ document.addEventListener('alpine:init', () => {
 
       collection.type = this.$store.globals.add_edit_modal_fields.type
       collection.label = this.$store.globals.add_edit_modal_fields.label
-      collection.slug = this.$store.globals.add_edit_modal_fields.slug
+      collection.name = this.$store.globals.add_edit_modal_fields.name
       collection.default = this.$store.globals.add_edit_modal_fields.default
 
       //  If current modal is for editing a field
@@ -54,7 +54,7 @@ document.addEventListener('alpine:init', () => {
 
       this.$store.globals.add_edit_modal_fields.type = ''
       this.$store.globals.add_edit_modal_fields.label = ''
-      this.$store.globals.add_edit_modal_fields.slug = ''
+      this.$store.globals.add_edit_modal_fields.name = ''
       this.$store.globals.add_edit_modal_fields.default = ''
 
       if (this.$store.globals.is_editing_field.status) {

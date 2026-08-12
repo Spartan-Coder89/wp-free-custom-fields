@@ -135,13 +135,12 @@ document.addEventListener('alpine:init', () => {
 
       this.locations_model = this.locations.map((location) => {
         return {
+          "post_id" : this.$store.globals.post_id,
           "id" : location.id,
           "location" : location.location,
           "selected_screen" : location.selected_screen
         }
       })
-
-      // console.log(this.locations_model)
     },
 
 

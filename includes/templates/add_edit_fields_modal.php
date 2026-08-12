@@ -26,8 +26,8 @@
         <input type="text" x-model="$store.globals.add_edit_modal_fields.label" />
       </div>
       <div class="form_control_wrap">
-        <label for="add_edit_field_slug">Field Slug</label>
-        <input type="text" x-model="$store.globals.add_edit_modal_fields.slug" />
+        <label for="add_edit_field_name">Field Name</label>
+        <input type="text" x-model="$store.globals.add_edit_modal_fields.name" />
       </div>
       <div class="form_control_wrap">
         <label for="add_edit_field_default">Field Default Value</label>
