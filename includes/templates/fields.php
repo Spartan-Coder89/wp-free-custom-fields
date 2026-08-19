@@ -45,3 +45,9 @@
   <input type="hidden" name="fields_config" :value="JSON.stringify( $store.globals.field_group )" />
   <input type="hidden" name="wpfcf_group_fields_nonce" value="<?php echo wp_create_nonce( 'wpfcf_group_fields_nonce' ); ?>" />
 </div>
+
+<?php
+
+// echo '<pre>';
+// echo var_dump( json_decode(get_post_meta( $_GET['post'], 'wpfcf_fields_config', true )) );
+// echo '</pre>';

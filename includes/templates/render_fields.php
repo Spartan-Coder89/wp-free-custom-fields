@@ -1,7 +1,3 @@
-<?php
-
-echo $rendered_fields_html;
-
-// echo '<pre>';
-// echo var_dump($rendered_fields_html);
-// echo '</pre>';
+<div class="wpfcf_fields_wrap">
+  <?php echo $rendered_fields_html; ?>
+</div>

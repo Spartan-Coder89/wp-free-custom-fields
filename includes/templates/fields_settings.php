@@ -58,3 +58,9 @@
 
   <input type="hidden" name="fields_settings_config" :value="JSON.stringify( locations_model )">
 </div>
+
+<?php
+
+// echo '<pre>';
+// echo var_dump( json_decode(get_post_meta( $_GET['post'], 'wpfcf_fields_settings_config', true )) );
+// echo '</pre>';
