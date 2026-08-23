@@ -11,8 +11,11 @@ class WPFCF_Location_Render_Comment_Form {
   use WPFCF_Has_Metaboxes;
 
   function __construct() {
+
+    $comment_id = isset($_GET['c']) ? $_GET['c'] :  0;
+
     $this->wpfcf_configs = new WPFCF_Configs;
-    $this->comment = get_comment( $_GET['c'] );
+    $this->comment = get_comment( $comment_id );
 
     add_action('comment_form_after_fields', function( $comment ) {
       $this->render_comment_form_fields();
