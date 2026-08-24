@@ -31,7 +31,6 @@ class WPFCF_Save_Rendered_Fields {
       }
     });
 
-
     //  Save attachment metadata on the edit screen
     add_action('edit_attachment', function( $post_id ) {
 
@@ -54,7 +53,6 @@ class WPFCF_Save_Rendered_Fields {
       }
     });
 
-
     //  Save attachment metadata on the list screen
     add_filter('attachment_fields_to_save', function( $post, $attachment ) {
 
@@ -69,7 +67,7 @@ class WPFCF_Save_Rendered_Fields {
         $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
 
         foreach ( $fields_config as $field ) {
-          $key = 'wpfcf_' . $field->name;
+          $key = $field->name;
 
           if ( isset( $attachment[ $key ] ) ) {
             $clean_value = $this->sanitize_field_value( $field->type, $attachment[ $key ] );
@@ -81,7 +79,6 @@ class WPFCF_Save_Rendered_Fields {
       return $post;
 
     }, 10, 2);
-
 
     //  Save post metadata
     add_action('save_post', function( $post_id ) {

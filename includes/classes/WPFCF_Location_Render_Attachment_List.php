@@ -75,7 +75,7 @@ class WPFCF_Location_Render_Attachment_List {
 
     $rendered_field = '';
     $type = $config->type;
-    $name = 'attachments[' . $post_id . '][wpfcf_' . $config->name . ']';
+    $name = 'attachments[' . $post_id . '][' . $config->name . ']';
     $id = $config->id;
     $display_value = $value ?? $config->default;
 
