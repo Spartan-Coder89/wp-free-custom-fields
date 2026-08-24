@@ -37,8 +37,7 @@ class WPFCF_Location_Render_Attachment_List {
             $form_fields[ 'wpfcf_'. $field->name ] = [ // VERY IMPORTANT NOTE: Always prefix the key to avoid collision with defaults
               'label' => $field->label,
               'input' => 'html',
-              'html'  => $this->render_field_html( $field, $value ),
-              'value' => $value
+              'html'  => $this->render_field_html( $field, $value, $post->ID )
             ];
           }
           
@@ -57,8 +56,7 @@ class WPFCF_Location_Render_Attachment_List {
             $form_fields[ 'wpfcf_'. $field->name ] = [ // VERY IMPORTANT NOTE: Always prefix the key to avoid collision with defaults
               'label' => $field->label,
               'input' => 'html',
-              'html'  => $this->render_field_html( $field ),
-              'value' => $value
+              'html'  => $this->render_field_html( $field, $value, $post->ID )
             ];
           }
         }
@@ -73,13 +71,13 @@ class WPFCF_Location_Render_Attachment_List {
   /**
    * Build the html of the field
    */
-  function render_field_html( $config, $value = null ) {
+  function render_field_html( $config, $value = null, $post_id = null ) {
 
     $rendered_field = '';
     $type = $config->type;
-    $name = $config->name;
+    $name = 'attachments[' . $post_id . '][wpfcf_' . $config->name . ']';
     $id = $config->id;
-    $display_value = $value ?? $config->default; // saved value wins, fallback to default
+    $display_value = $value ?? $config->default;
 
     if ($type == 'text' or $type == 'number' or
         $type == 'range' or $type == 'email' or
@@ -88,9 +86,6 @@ class WPFCF_Location_Render_Attachment_List {
 
     } else if ($type == 'textarea') {
       $rendered_field = '<textarea name="'. esc_attr($name) .'" id="field_'. esc_attr($id) .'">'. esc_textarea($display_value) .'</textarea>';
-
-    } else {
-      //  Others
     }
 
     return $rendered_field;
