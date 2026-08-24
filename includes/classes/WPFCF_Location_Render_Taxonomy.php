@@ -19,18 +19,22 @@ class WPFCF_Location_Render_Taxonomy {
 
     $field_groups_ids = $this->wpfcf_configs->get_filtered_fields_settings_config( 'taxonomy', $this->taxonomy );
 
-    foreach ( $field_groups_ids as $field_group_id ) {
+    if (!empty( $field_groups_ids )) {
 
-      $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
-      $rendered_fields_html = $this->render_fields_html( $fields_config );
-
-      add_action( "{$this->taxonomy}_add_form_fields", function() use ( $rendered_fields_html ) {
-        echo $rendered_fields_html;
-      });
-
-      add_action( "{$this->taxonomy}_edit_form_fields", function() use ( $rendered_fields_html ) {
-        echo '<tr class="form-field"><td colspan="2">' . $rendered_fields_html . '</td></tr>';
-      });
+      foreach ( $field_groups_ids as $field_group_id ) {
+  
+        $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
+  
+        add_action( "{$this->taxonomy}_add_form_fields", function( $term ) use ( $fields_config, $field_group_id ) {
+          echo '<input type="hidden" name="wpfcf_rendered_fields[]" value="'. $field_group_id .'">';
+          echo $this->render_fields_html( $fields_config, 'add', $term->term_id );
+        });
+  
+        add_action( "{$this->taxonomy}_edit_form_fields", function( $term ) use ( $fields_config, $field_group_id ) {
+          echo '<input type="hidden" name="wpfcf_rendered_fields[]" value="'. $field_group_id .'">';
+          echo $this->render_fields_html( $fields_config, 'edit', $term->term_id );
+        });
+      }
     }
   }
 
@@ -38,7 +42,7 @@ class WPFCF_Location_Render_Taxonomy {
   /**
    * Renders the html markup of the fields
    */
-  function render_fields_html( $fields_config ) {
+  function render_fields_html( $fields_config, $screen_type, $term_id = 0 ) {
 
     $rendered_fields = '';
 
@@ -52,16 +56,42 @@ class WPFCF_Location_Render_Taxonomy {
       $default_value = $config->default;
       $id  = $config->id;
 
-      if ($type == 'textarea') {
-        $rendered_field .= '<textarea id="field_'. $id .'">'. $default_value .'</textarea>';
-      } else {
-        $rendered_field .= '<input type="'. $type .'" name="'. $name .'" id="field_'. $id .'" value="'. $default_value .'" />';
-      }
+      $term_meta = get_term_meta( $term_id, $name, true );
+      $value = $term_meta ? $term_meta : $default_value;
 
-      $rendered_fields .= '<div id="wpfcf_field_wrap_'. $id .'" class="wpfcf_field_wrap">'.
-        '<label for="field_'. $id .'">'. $label .'</label>'.
-        $rendered_field
-      .'</div>';
+      if ($screen_type == 'edit') {
+
+        $rendered_fields .= '<tr class="form-field">';
+          $rendered_fields .= '<th scope="row"><label>'. $label .'</label></th>';
+          $rendered_fields .= '<td>';
+  
+            if ($type == 'textarea') {
+              $rendered_field .= '<textarea id="field_'. $id .'">'. $value .'</textarea>';
+            } else {
+              $rendered_field .= '<input type="'. $type .'" name="'. $name .'" id="field_'. $id .'" value="'. $value .'" />';
+            }
+  
+            $rendered_fields .= '<div id="wpfcf_field_wrap_'. $id .'" class="wpfcf_field_wrap">'.
+              $rendered_field
+            .'</div>';
+          $rendered_fields .= '</td>';
+        $rendered_fields .= '</tr>';
+
+      } else {
+
+        $rendered_fields .= '<div class="form-field">';
+          if ($type == 'textarea') {
+            $rendered_field .= '<textarea id="field_'. $id .'">'. $value .'</textarea>';
+          } else {
+            $rendered_field .= '<input type="'. $type .'" name="'. $name .'" id="field_'. $id .'" value="'. $value .'" />';
+          }
+
+          $rendered_fields .= '<div id="wpfcf_field_wrap_'. $id .'" class="wpfcf_field_wrap">'.
+            '<label>'. $label .'</label>'.
+            $rendered_field
+          .'</div>';
+        $rendered_fields .= '</div>';
+      }
     }
 
     return $rendered_fields;

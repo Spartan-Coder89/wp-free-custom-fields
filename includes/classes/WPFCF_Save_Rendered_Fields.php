@@ -102,6 +102,45 @@ class WPFCF_Save_Rendered_Fields {
       }
     });
 
+    
+    add_action( 'edited_term', function( $term_id ) {
+
+      if (!current_user_can( 'edit_term', $term_id ) ) return;
+
+      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+
+        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
+        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+
+          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
+          foreach ($field_group as $key => $field) {
+
+            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
+            update_term_meta( $term_id, $field->name, $post_meta_value );
+          }
+        }
+      }
+    });
+
+    add_action( 'created_term', function( $term_id ) {
+
+      if (!current_user_can( 'edit_term', $term_id ) ) return;
+
+      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+
+        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
+        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+
+          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
+          foreach ($field_group as $key => $field) {
+
+            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
+            update_term_meta( $term_id, $field->name, $post_meta_value );
+          }
+        }
+      }
+    });
+
   }
 
 
