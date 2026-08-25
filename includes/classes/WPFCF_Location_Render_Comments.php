@@ -53,12 +53,14 @@ class WPFCF_Location_Render_Comments {
 
       $wpfcf_group_fields = get_post( $field_groups_id );
       $wpfcf_fields_config = $this->wpfcf_configs->get_fields_config( $field_groups_id );
-      $rendered_fields_html = $this->render_fields_html( $wpfcf_fields_config );
 
       $metabox_args[] = [
         'html_id'         => str_replace('-', '_', $wpfcf_group_fields->post_name),
         'title'           => $wpfcf_group_fields->post_title,
-        'callback_render' => function() use ( $rendered_fields_html ) { 
+        'callback_render' => function( $comment ) use ( $wpfcf_fields_config, $field_groups_id ) { 
+
+          echo '<input type="hidden" name="wpfcf_rendered_fields[]" value="'. $field_groups_id .'">';
+          $rendered_fields_html = $this->render_fields_html( $wpfcf_fields_config, $comment->comment_ID );
           require WPFCF_PATH .'/includes/templates/render_fields.php';
         }, 
         'screen'          => $selected_screen,
@@ -74,7 +76,7 @@ class WPFCF_Location_Render_Comments {
   /**
    * Renders the html markup of the fields
    */
-  function render_fields_html( $fields_config ) {
+  function render_fields_html( $fields_config, $comment_id ) {
 
     $rendered_fields = '';
 
@@ -88,10 +90,13 @@ class WPFCF_Location_Render_Comments {
       $default_value = $config->default;
       $id  = $config->id;
 
+      $comment_meta = get_comment_meta( $comment_id, $name, true );
+      $value = $comment_meta ? $comment_meta : $default_value;
+
       if ($type == 'textarea') {
-        $rendered_field .= '<textarea id="field_'. $id .'">'. $default_value .'</textarea>';
+        $rendered_field .= '<textarea id="field_'. $id .'">'. $value .'</textarea>';
       } else {
-        $rendered_field .= '<input type="'. $type .'" name="'. $name .'" id="field_'. $id .'" value="'. $default_value .'" />';
+        $rendered_field .= '<input type="'. $type .'" name="'. $name .'" id="field_'. $id .'" value="'. $value .'" />';
       }
 
       $rendered_fields .= '<div id="wpfcf_field_wrap_'. $id .'" class="wpfcf_field_wrap">'.

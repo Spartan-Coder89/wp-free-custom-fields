@@ -102,7 +102,7 @@ class WPFCF_Save_Rendered_Fields {
       }
     });
 
-    
+    //  Save edited term metadata
     add_action( 'edited_term', function( $term_id ) {
 
       if (!current_user_can( 'edit_term', $term_id ) ) return;
@@ -122,6 +122,7 @@ class WPFCF_Save_Rendered_Fields {
       }
     });
 
+    //  Save created term metadata
     add_action( 'created_term', function( $term_id ) {
 
       if (!current_user_can( 'edit_term', $term_id ) ) return;
@@ -139,6 +140,57 @@ class WPFCF_Save_Rendered_Fields {
           }
         }
       }
+    });
+
+    //  Save edited comment meta
+    add_action('edit_comment', function( $comment_id ) {
+
+      if ( !current_user_can( 'moderate_comments' ) ) return;
+
+      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+
+        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
+        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+
+          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
+
+          foreach ($field_group as $key => $field) {
+
+            if ( isset( $_POST[ $field->name ] ) ) {
+              $comment_meta_value = $this->sanitize_field_value( $field->type, $_POST[ $field->name ] );
+              update_comment_meta( $comment_id, $field->name, $comment_meta_value );
+            }
+          }
+        }
+      }
+    });
+
+    //  Save frontend form comment meta 
+    add_action('comment_post', function( $comment_id ) {
+
+      // Will have to think about this since its gonna conflict 
+      // with caching on the frontend side
+      // $wpfcf_comment_frontend_nonce = $_POST['wpfcf_comment_frontend_nonce'];
+      // if ( !isset( $wpfcf_comment_frontend_nonce ) or ! wp_verify_nonce( $wpfcf_comment_frontend_nonce, 'wpfcf_save_comment_frontend' ) ) {
+      //   return;
+      // }
+
+      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+
+        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
+        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+
+          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
+          foreach ($field_group as $key => $field) {
+
+            if ( isset( $_POST[ $field->name ] ) ) {
+              $comment_meta_value = $this->sanitize_field_value( $field->type, $_POST[ $field->name ] );
+              update_comment_meta( $comment_id, $field->name, $comment_meta_value );
+            }
+          }
+        }
+      }
+
     });
 
   }

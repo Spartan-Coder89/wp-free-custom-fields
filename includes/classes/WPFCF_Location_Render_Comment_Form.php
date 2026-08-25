@@ -41,9 +41,11 @@ class WPFCF_Location_Render_Comment_Form {
 
       foreach ( $field_groups_ids_all as $field_group_id ) {
         
-        $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
+        echo '<input type="hidden" name="wpfcf_rendered_fields[]" value="'. $field_group_id .'">';
 
+        $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
         foreach ( $fields_config as $field ) {
+          
           echo '<p class="comment-form-'. esc_attr( $field->name ) .'">';
             echo '<label for="wpfcf_'. esc_attr( $field->name ) .'">'. esc_html( $field->label ) .'</label>';
             echo $this->render_field_html( $field );
@@ -58,9 +60,11 @@ class WPFCF_Location_Render_Comment_Form {
 
       foreach ( $field_groups_ids as $field_group_id ) {
         
-        $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
+        echo '<input type="hidden" name="wpfcf_rendered_fields[]" value="'. $field_group_id .'">';
 
+        $fields_config = $this->wpfcf_configs->get_fields_config( $field_group_id );
         foreach ( $fields_config as $field ) {
+
           echo '<p class="comment-form-'. esc_attr( $field->name ) .'">';
             echo '<label for="wpfcf_'. esc_attr( $field->name ) .'">'. esc_html( $field->label ) .'</label>';
             echo $this->render_field_html( $field );
