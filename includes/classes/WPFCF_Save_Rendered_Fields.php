@@ -16,19 +16,7 @@ class WPFCF_Save_Rendered_Fields {
       if ( wp_is_post_revision($post_id) ) return;
       if ( !current_user_can('edit_post', $post_id) ) return;
 
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
-
-            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
-            update_post_meta( $post_id, $field->name, $post_meta_value );
-          }
-        }
-      }
+      $this->save_metadata( $post_id, 'page' );
     });
 
     //  Save attachment metadata on the edit screen
@@ -38,19 +26,7 @@ class WPFCF_Save_Rendered_Fields {
       if ( wp_is_post_revision($post_id) ) return;
       if ( !current_user_can('edit_post', $post_id) ) return;
 
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
-
-            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
-            update_post_meta( $post_id, $field->name, $post_meta_value );
-          }
-        }
-      }
+      $this->save_metadata( $post_id, 'attachment' );
     });
 
     //  Save attachment metadata on the list screen
@@ -87,82 +63,28 @@ class WPFCF_Save_Rendered_Fields {
       if ( wp_is_post_revision($post_id) ) return;
       if ( !current_user_can('edit_post', $post_id) ) return;
 
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
-
-            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
-            update_post_meta( $post_id, $field->name, $post_meta_value );
-          }
-        }
-      }
+      $this->save_metadata( $post_id, 'post' );
     });
 
     //  Save edited term metadata
     add_action( 'edited_term', function( $term_id ) {
 
       if (!current_user_can( 'edit_term', $term_id ) ) return;
-
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
-
-            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
-            update_term_meta( $term_id, $field->name, $post_meta_value );
-          }
-        }
-      }
+      $this->save_metadata( $term_id, 'taxonomy' );
     });
 
     //  Save created term metadata
     add_action( 'created_term', function( $term_id ) {
 
       if (!current_user_can( 'edit_term', $term_id ) ) return;
-
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
-
-            $post_meta_value = $this->sanitize_field_value( $field->type, $_POST[$field->name] );
-            update_term_meta( $term_id, $field->name, $post_meta_value );
-          }
-        }
-      }
+      $this->save_metadata( $term_id, 'taxonomy' );
     });
 
     //  Save edited comment meta
     add_action('edit_comment', function( $comment_id ) {
 
       if ( !current_user_can( 'moderate_comments' ) ) return;
-
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
-
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
-
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-
-          foreach ($field_group as $key => $field) {
-
-            if ( isset( $_POST[ $field->name ] ) ) {
-              $comment_meta_value = $this->sanitize_field_value( $field->type, $_POST[ $field->name ] );
-              update_comment_meta( $comment_id, $field->name, $comment_meta_value );
-            }
-          }
-        }
-      }
+      $this->save_metadata( $comment_id, 'comment' );
     });
 
     //  Save frontend form comment meta 
@@ -175,24 +97,65 @@ class WPFCF_Save_Rendered_Fields {
       //   return;
       // }
 
-      if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+      $this->save_metadata( $comment_id, 'comment' );
+    });
 
-        $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
-        foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+    //  Save edit user profile metadata 
+    add_action('edit_user_profile_update', function( $user_id ) {
+      $this->save_metadata( $user_id, 'user' );
+    });
 
-          $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
-          foreach ($field_group as $key => $field) {
+    //  Save edit personal profile metadata
+    add_action('personal_options_update', function( $user_id ) {
+      $this->save_metadata( $user_id, 'user' );
+    });
 
-            if ( isset( $_POST[ $field->name ] ) ) {
-              $comment_meta_value = $this->sanitize_field_value( $field->type, $_POST[ $field->name ] );
-              update_comment_meta( $comment_id, $field->name, $comment_meta_value );
+    //  Save add new user metadata
+    add_action('user_register', function( $user_id ) {
+      $this->save_metadata( $user_id, 'user' );
+    });
+
+    
+  }
+
+
+  /**
+   * Helper function to save metadata
+   * according to specified screen
+   */
+  function save_metadata( $id, $save_type ) {
+
+    if (isset( $_POST['wpfcf_rendered_fields'] ) and !empty( $_POST['wpfcf_rendered_fields'] )) {
+
+      $wpfcf_rendered_fields = $_POST['wpfcf_rendered_fields'];
+      foreach ($wpfcf_rendered_fields as $key => $field_group_id) {
+
+        $field_group = json_decode( get_post_meta( $field_group_id, 'wpfcf_fields_config', true ) );
+        foreach ($field_group as $key => $field) {
+
+          if (isset( $_POST[ $field->name ] )) {
+
+            $meta_value = $this->sanitize_field_value( $field->type, $_POST[ $field->name ] );
+
+            if ($save_type == 'page' or $save_type == 'attachment' or $save_type == 'post') {
+              update_post_meta( $id, $field->name, $meta_value );
+
+            } else if ($save_type == 'taxonomy') {
+              update_term_meta( $id, $field->name, $meta_value );
+
+            } else if ($save_type == 'comment') {
+              update_comment_meta( $id, $field->name, $meta_value );
+
+            } else if ($save_type == 'user') {
+              update_user_meta( $id, $field->name, $meta_value );
+
+            } else {
+              //  Do nothing
             }
           }
         }
       }
-
-    });
-
+    }
   }
 
 
